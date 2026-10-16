@@ -5,215 +5,339 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3DR Task Counter</title>
     <style>
+        :root {
+            --bg-main: #0b131d;
+            --bg-card: #131f2e;
+            --border-color: #22344a;
+            --accent-cyan: #38bdf8;
+            --accent-indigo: #6366f1;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
         body {
-            background-color: #0d1b2a;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 24px 16px;
             margin: 0;
+            min-height: 100vh;
         }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         h2 {
-            letter-spacing: 2px;
-            color: #e0e1dd;
-            margin-bottom: 5px;
+            font-size: 18px;
+            letter-spacing: 3px;
+            color: #cbd5e1;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
         }
-        #counter {
-            font-size: 64px;
-            font-weight: bold;
-            margin: 5px 0;
-        }
+
         #status-display {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: #1e293b;
-            border: 1px solid #475569;
-            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 30px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+
+        .dashboard-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .counter-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .counter-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
-        .timer-info {
-            font-size: 14px;
-            color: #94a3b8;
-            margin-bottom: 5px;
+
+        #counter {
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+            margin: 8px 0 16px 0;
         }
+
+        .timer-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 20px;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .timer-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timer-title {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
         #stopwatch {
-            font-size: 24px;
-            font-weight: bold;
-            color: #38bdf8;
-            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-variant-numeric: tabular-nums;
         }
-        .avg-info {
-            font-size: 13px;
-            color: #cbd5e1;
-            margin-bottom: 25px;
+
+        #avg-display {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-variant-numeric: tabular-nums;
         }
+
         #tap-btn {
-            width: 160px;
-            height: 160px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            background: #6366f1;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             color: white;
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 24px;
+            font-weight: 800;
             border: none;
             cursor: pointer;
             box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-            transition: transform 0.1s ease;
-            margin-bottom: 20px;
-        }
-        #tap-btn:active {
-            transform: scale(0.95);
-        }
-        .btn-group {
+            transition: all 0.15s ease;
+            margin-bottom: 24px;
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            align-items: center;
             justify-content: center;
+            letter-spacing: 2px;
         }
+
+        #tap-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(99, 102, 241, 0.5);
+        }
+
+        #tap-btn:active {
+            transform: scale(0.96) translateY(0);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+
         button.action-btn {
             background: #1e293b;
             color: #e2e8f0;
-            border: 1px solid #475569;
-            padding: 10px 18px;
-            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: 10px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s, border-color 0.2s;
         }
+
         button.action-btn:hover {
-            background: #334155;
+            background: #273548;
+            border-color: #334155;
         }
+
         .panel-container {
             width: 100%;
-            max-width: 500px;
-            background: #1e293b;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
+            max-width: 440px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            margin-bottom: 16px;
+            box-sizing: border-box;
         }
+
         .panel-header {
             font-size: 12px;
-            color: #94a3b8;
+            font-weight: 700;
+            color: var(--text-muted);
             letter-spacing: 1px;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             user-select: none;
         }
+
         .panel-header:hover {
-            color: #cbd5e1;
+            color: var(--text-main);
         }
+
+        .toggle-icon {
+            font-family: monospace;
+            font-size: 14px;
+            background: #1e293b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent-cyan);
+        }
+
         .panel-content {
-            margin-top: 10px;
+            margin-top: 12px;
+            max-height: 220px;
+            overflow-y: auto;
         }
+
         .collapsed .panel-content {
             display: none;
         }
-        .collapsed .panel-header {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
+
         .log-item {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
             padding: 8px 0;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid rgba(34, 52, 74, 0.6);
         }
+
         .log-item:last-child {
             border-bottom: none;
         }
+
         .log-duration {
-            color: #38bdf8;
-            font-weight: bold;
+            color: var(--accent-cyan);
+            font-weight: 700;
         }
+
         .break-log {
-            color: #eab308;
+            color: #f59e0b;
         }
+
         #summary-panel {
             display: none;
-            border-left: 4px solid #22c55e;
+            border-left: 4px solid #10b981;
             background: #0f172a;
         }
+
         .summary-row {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
-            padding: 5px 0;
+            font-size: 13px;
+            padding: 6px 0;
             color: #e2e8f0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
 <body>
 
-    <h2>3DR TASK COUNTER</h2>
-    <div id="counter">0</div>
-    <div id="status-display">SHIFT NOT STARTED</div>
-    <div class="timer-info">Active Time</div>
-    <div id="stopwatch">00:00:00</div>
-    <div class="avg-info" id="avg-display">Avg Interval: --</div>
-
-    <button id="tap-btn" onclick="tap()">TAP</button>
-
-    <div class="btn-group">
-        <button class="action-btn" onclick="toggleBreakOrStart()" id="break-start-btn">Start Shift</button>
-        <button class="action-btn" onclick="endShiftReport()">End Of Shift</button>
-        <button class="action-btn" onclick="copyData()">Copy Data</button>
-        <button class="action-btn" onclick="downloadCSV()">Download CSV</button>
+    <div class="app-header">
+        <h2>3DR Task Counter</h2>
+        <div id="status-display">Shift Not Started</div>
     </div>
 
-    <!-- Shift Summary Display Panel (Collapsible) -->
+    <!-- Main Control Dashboard Card -->
+    <div class="dashboard-card">
+        <div class="counter-section">
+            <span class="counter-label">Tasks Completed</span>
+            <div id="counter">0</div>
+        </div>
+
+        <div class="timer-box">
+            <div class="timer-group">
+                <span class="timer-title">Active Time</span>
+                <div id="stopwatch">00:00:00</div>
+            </div>
+            <div style="width: 1px; height: 24px; background: var(--border-color);"></div>
+            <div class="timer-group">
+                <span class="timer-title">Avg Interval</span>
+                <div id="avg-display">--</div>
+            </div>
+        </div>
+
+        <button id="tap-btn" onclick="tap()">TAP</button>
+
+        <div class="btn-group">
+            <button class="action-btn" onclick="toggleBreakOrStart()" id="break-start-btn" style="grid-column: span 2; background: #312e81; border-color: #4338ca;">Start Shift</button>
+            <button class="action-btn" onclick="endShiftReport()">End Shift</button>
+            <button class="action-btn" onclick="copyData()">Copy Data</button>
+            <button class="action-btn" onclick="downloadCSV()" style="grid-column: span 2;">Download CSV Report</button>
+        </div>
+    </div>
+
+    <!-- Shift Summary Display Panel -->
     <div class="panel-container collapsed" id="summary-panel">
-        <div class="panel-header" style="color: #22c55e;" onclick="togglePanel(this)">
+        <div class="panel-header" style="color: #10b981;" onclick="togglePanel(this)">
             <span>LATEST SHIFT SUMMARY REPORT</span>
             <span class="toggle-icon">[+]</span>
         </div>
         <div class="panel-content">
-            <div class="summary-row"><span>Total Tasks Made:</span> <strong id="sum-tasks">0</strong></div>
-            <div class="summary-row"><span>Total Active Time:</span> <strong id="sum-time">00:00:00</strong></div>
-            <div class="summary-row"><span>Average Interval:</span> <strong id="sum-avg">--</strong></div>
+            <div class="summary-row"><span>Total Tasks:</span> <strong id="sum-tasks">0</strong></div>
+            <div class="summary-row"><span>Active Time:</span> <strong id="sum-time">00:00:00</strong></div>
+            <div class="summary-row"><span>Avg Interval:</span> <strong id="sum-avg">--</strong></div>
             <div class="summary-row"><span>Completed At:</span> <strong id="sum-ended">--</strong></div>
         </div>
     </div>
 
-    <!-- Shift History Panel (Collapsible) -->
+    <!-- Shift History Panel -->
     <div class="panel-container collapsed">
         <div class="panel-header" onclick="togglePanel(this)">
             <span>SHIFT HISTORY</span>
             <span class="toggle-icon">[+]</span>
         </div>
         <div class="panel-content">
-            <div id="history-list"><span style="font-size: 13px; color: #64748b;">No completed shifts recorded yet.</span></div>
+            <div id="history-list"><span style="font-size: 12px; color: var(--text-muted);">No completed shifts recorded yet.</span></div>
         </div>
     </div>
 
-    <!-- Tap Logs Panel (Collapsible) -->
+    <!-- Tap Logs Panel -->
     <div class="panel-container">
         <div class="panel-header" onclick="togglePanel(this)">
-            <span>TAP LOG (NEWEST FIRST)</span>
+            <span>LIVE TAP LOG (NEWEST FIRST)</span>
             <span class="toggle-icon">[-]</span>
         </div>
         <div class="panel-content">
-            <div id="log-list"><span style="font-size: 13px; color: #64748b;">No logs yet.</span></div>
+            <div id="log-list"><span style="font-size: 12px; color: var(--text-muted);">No logs yet.</span></div>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // GOOGLE SHEETS WEB APP URL CONFIGURATION
-        // ==========================================
         const WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"; 
-        // Paste your deployed Google Apps Script Web App URL between the quotes above.
 
         let count = 0;
         let logs = [];
@@ -254,13 +378,16 @@
                     const btn = document.getElementById('break-start-btn');
                     if (!isStarted) {
                         btn.innerText = "Start Shift";
-                        btn.style.borderColor = "#475569";
+                        btn.style.background = "#312e81";
+                        btn.style.borderColor = "#4338ca";
                     } else if (isBreak) {
                         btn.innerText = "Resume";
-                        btn.style.borderColor = "#22c55e";
+                        btn.style.background = "#14532d";
+                        btn.style.borderColor = "#166534";
                     } else {
                         btn.innerText = "Start Break";
-                        btn.style.borderColor = "#475569";
+                        btn.style.background = "#78350f";
+                        btn.style.borderColor = "#92400e";
                     }
                     updateActiveTimerDisplay();
                     renderLogs();
@@ -333,17 +460,14 @@
         function updateStatusUI() {
             const statusEl = document.getElementById('status-display');
             if (!isStarted) {
-                statusEl.innerText = "SHIFT NOT STARTED";
-                statusEl.style.color = "#94a3b8";
-                statusEl.style.borderColor = "#475569";
+                statusEl.innerText = "Shift Not Started";
+                statusEl.style.color = "var(--text-muted)";
             } else if (isBreak) {
-                statusEl.innerText = "ON BREAK";
-                statusEl.style.color = "#eab308";
-                statusEl.style.borderColor = "#eab308";
+                statusEl.innerText = "On Break";
+                statusEl.style.color = "#f59e0b";
             } else {
-                statusEl.innerText = "ON TASK";
-                statusEl.style.color = "#38bdf8";
-                statusEl.style.borderColor = "#38bdf8";
+                statusEl.innerText = "On Task";
+                statusEl.style.color = "var(--accent-cyan)";
             }
         }
 
@@ -355,26 +479,19 @@
             seconds = seconds % 60;
             mins = mins % 60;
             
-            if (hrs > 0) {
-                return `${hrs}h ${mins}m ${seconds}s`;
-            } else if (mins > 0) {
-                return `${mins}m ${seconds}s`;
-            } else {
-                return `${seconds}s`;
-            }
+            if (hrs > 0) return `${hrs}h ${mins}m ${seconds}s`;
+            if (mins > 0) return `${mins}m ${seconds}s`;
+            return `${seconds}s`;
         }
 
         function getActiveDurationBetween(laterLogTimeMs, earlierLogTimeMs) {
             let totalDiffMs = laterLogTimeMs - earlierLogTimeMs;
-            
             for (let i = 0; i < logs.length; i++) {
                 if (logs[i].type === 'break_start') {
                     let breakStartMs = new Date(logs[i].timestamp).getTime();
-                    
                     for (let j = i - 1; j >= 0; j--) {
                         if (logs[j].type === 'break_end') {
                             let breakEndMs = new Date(logs[j].timestamp).getTime();
-                            
                             if (breakStartMs >= earlierLogTimeMs && breakEndMs <= laterLogTimeMs) {
                                 totalDiffMs -= (breakEndMs - breakStartMs);
                             }
@@ -410,13 +527,10 @@
                 isStarted = true;
                 isBreak = false;
                 const now = new Date();
-                logs.unshift({
-                    type: 'start',
-                    timestamp: now.toISOString(),
-                    formattedTime: now.toLocaleString()
-                });
+                logs.unshift({ type: 'start', timestamp: now.toISOString(), formattedTime: now.toLocaleString() });
                 btn.innerText = "Start Break";
-                btn.style.borderColor = "#475569";
+                btn.style.background = "#78350f";
+                btn.style.borderColor = "#92400e";
                 updateStatusUI();
                 renderLogs();
                 saveActiveSession();
@@ -425,33 +539,23 @@
 
             if (!isBreak) {
                 let finished = confirm("Have you already finished the task?");
+                if (!finished) return;
+                isBreak = true;
                 const now = new Date();
-
-                if (finished) {
-                    isBreak = true;
-                    logs.unshift({
-                        type: 'break_start',
-                        timestamp: now.toISOString(),
-                        formattedTime: now.toLocaleString()
-                    });
-                    btn.innerText = "Resume";
-                    btn.style.borderColor = "#22c55e";
-                    updateStatusUI();
-                    renderLogs();
-                    saveActiveSession();
-                } else {
-                    return;
-                }
+                logs.unshift({ type: 'break_start', timestamp: now.toISOString(), formattedTime: now.toLocaleString() });
+                btn.innerText = "Resume";
+                btn.style.background = "#14532d";
+                btn.style.borderColor = "#166534";
+                updateStatusUI();
+                renderLogs();
+                saveActiveSession();
             } else {
                 isBreak = false;
                 const now = new Date();
-                logs.unshift({
-                    type: 'break_end',
-                    timestamp: now.toISOString(),
-                    formattedTime: now.toLocaleString()
-                });
+                logs.unshift({ type: 'break_end', timestamp: now.toISOString(), formattedTime: now.toLocaleString() });
                 btn.innerText = "Start Break";
-                btn.style.borderColor = "#475569";
+                btn.style.background = "#78350f";
+                btn.style.borderColor = "#92400e";
                 updateStatusUI();
                 renderLogs();
                 saveActiveSession();
@@ -463,14 +567,11 @@
                 isStarted = true;
                 isBreak = false;
                 const nowStart = new Date();
-                logs.unshift({
-                    type: 'start',
-                    timestamp: nowStart.toISOString(),
-                    formattedTime: nowStart.toLocaleString()
-                });
+                logs.unshift({ type: 'start', timestamp: nowStart.toISOString(), formattedTime: nowStart.toLocaleString() });
                 const btn = document.getElementById('break-start-btn');
                 btn.innerText = "Start Break";
-                btn.style.borderColor = "#475569";
+                btn.style.background = "#78350f";
+                btn.style.borderColor = "#92400e";
                 updateStatusUI();
                 renderLogs();
                 saveActiveSession();
@@ -480,14 +581,11 @@
             if (isBreak) {
                 isBreak = false;
                 const nowBreakEnd = new Date();
-                logs.unshift({
-                    type: 'break_end',
-                    timestamp: nowBreakEnd.toISOString(),
-                    formattedTime: nowBreakEnd.toLocaleString()
-                });
+                logs.unshift({ type: 'break_end', timestamp: nowBreakEnd.toISOString(), formattedTime: nowBreakEnd.toLocaleString() });
                 const btn = document.getElementById('break-start-btn');
                 btn.innerText = "Start Break";
-                btn.style.borderColor = "#475569";
+                btn.style.background = "#78350f";
+                btn.style.borderColor = "#92400e";
                 updateStatusUI();
                 renderLogs();
                 saveActiveSession();
@@ -496,14 +594,8 @@
 
             count++;
             document.getElementById('counter').innerText = count;
-            
             const now = new Date();
-            logs.unshift({
-                type: 'tap',
-                id: count,
-                timestamp: now.toISOString(),
-                formattedTime: now.toLocaleString()
-            });
+            logs.unshift({ type: 'tap', id: count, timestamp: now.toISOString(), formattedTime: now.toLocaleString() });
 
             updateStatusUI();
             renderLogs();
@@ -511,21 +603,13 @@
         }
 
         function syncToGoogleSheets(shiftData) {
-            if (WEB_APP_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
-                console.warn("Google Apps Script URL not configured yet.");
-                return;
-            }
-
+            if (WEB_APP_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) return;
             fetch(WEB_APP_URL, {
                 method: "POST",
-                mode: "no-cors", // Required for Google Apps Script web apps
+                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(shiftData)
-            }).then(() => {
-                console.log("Shift automatically synced to Google Sheets!");
-            }).catch(err => {
-                console.error("Cloud sync error:", err);
-            });
+            }).catch(err => console.error("Cloud sync error:", err));
         }
 
         function endShiftReport() {
@@ -560,8 +644,6 @@
             shiftHistory.unshift(currentShiftData);
             localStorage.setItem('3dr_shift_history', JSON.stringify(shiftHistory));
             renderHistory();
-
-            // Seamlessly and automatically push to Google Drive / Sheets in the background!
             syncToGoogleSheets(currentShiftData);
 
             localStorage.removeItem('3dr_active_session');
@@ -573,7 +655,7 @@
             logList.innerHTML = "";
 
             if (logs.length === 0) {
-                logList.innerHTML = `<span style="font-size: 13px; color: #64748b;">No logs yet.</span>`;
+                logList.innerHTML = `<span style="font-size: 12px; color: var(--text-muted);">No logs yet.</span>`;
                 return;
             }
 
@@ -582,38 +664,25 @@
                 if (index < logs.length - 1) {
                     const currentMs = new Date(log.timestamp).getTime();
                     const prevMs = new Date(logs[index + 1].timestamp).getTime();
-                    const activeDiffMs = getActiveDurationBetween(currentMs, prevMs);
-                    durationStr = "+" + formatDuration(activeDiffMs);
+                    durationStr = "+" + formatDuration(getActiveDurationBetween(currentMs, prevMs));
                 }
 
                 const item = document.createElement('div');
                 item.className = 'log-item';
 
                 if (log.type === 'tap') {
-                    item.innerHTML = `
-                        <span><strong>#${log.id}</strong> ${log.formattedTime}</span>
-                        <span class="log-duration">${durationStr}</span>
-                    `;
+                    item.innerHTML = `<span><strong>#${log.id}</strong> ${log.formattedTime}</span><span class="log-duration">${durationStr}</span>`;
                 } else if (log.type === 'start') {
-                    item.innerHTML = `
-                        <span>Start Of Shift ${log.formattedTime}</span>
-                        <span style="color: #94a3b8;">Start</span>
-                    `;
+                    item.innerHTML = `<span>Start Of Shift ${log.formattedTime}</span><span style="color: var(--text-muted);">Start</span>`;
                 } else if (log.type === 'break_start') {
-                    item.innerHTML = `
-                        <span class="break-log">[Break] ${log.formattedTime}</span>
-                        <span style="color: #eab308;">Break Start</span>
-                    `;
+                    item.innerHTML = `<span class="break-log">[Break] ${log.formattedTime}</span><span style="color: #f59e0b;">Break</span>`;
                 } else if (log.type === 'break_end') {
-                    item.innerHTML = `
-                        <span class="break-log">[Resume] ${log.formattedTime}</span>
-                        <span style="color: #22c55e;">Resumed</span>
-                    `;
+                    item.innerHTML = `<span class="break-log">[Resume] ${log.formattedTime}</span><span style="color: #10b981;">Resumed</span>`;
                 }
                 logList.appendChild(item);
             });
 
-            document.getElementById('avg-display').innerText = `Avg Interval: ${calculateAverageInterval()}`;
+            document.getElementById('avg-display').innerText = calculateAverageInterval();
         }
 
         function renderHistory() {
@@ -621,17 +690,14 @@
             historyList.innerHTML = "";
 
             if (shiftHistory.length === 0) {
-                historyList.innerHTML = `<span style="font-size: 13px; color: #64748b;">No completed shifts recorded yet.</span>`;
+                historyList.innerHTML = `<span style="font-size: 12px; color: var(--text-muted);">No completed shifts recorded yet.</span>`;
                 return;
             }
 
             shiftHistory.forEach((shift, index) => {
                 const item = document.createElement('div');
                 item.className = 'log-item';
-                item.innerHTML = `
-                    <span><strong>Shift #${shiftHistory.length - index}</strong> (${shift.endedAt})</span>
-                    <span style="color: #38bdf8;">Tasks: ${shift.tasks} | Time: ${shift.activeTime} | Avg: ${shift.avgInterval}</span>
-                `;
+                item.innerHTML = `<span><strong>Shift #${shiftHistory.length - index}</strong> (${shift.endedAt})</span><span style="color: var(--accent-cyan);">Tasks: ${shift.tasks} | Time: ${shift.activeTime}</span>`;
                 historyList.appendChild(item);
             });
         }
@@ -641,11 +707,12 @@
             logs = [];
             document.getElementById('counter').innerText = count;
             document.getElementById('stopwatch').innerText = "00:00:00";
-            document.getElementById('avg-display').innerText = "Avg Interval: --";
+            document.getElementById('avg-display').innerText = "--";
             
             const btn = document.getElementById('break-start-btn');
             btn.innerText = "Start Shift";
-            btn.style.borderColor = "#475569";
+            btn.style.background = "#312e81";
+            btn.style.borderColor = "#4338ca";
             
             isStarted = false;
             isBreak = false;
@@ -658,17 +725,12 @@
             logs.forEach((log, index) => {
                 let durationStr = "Start";
                 if (index < logs.length - 1) {
-                    const currentMs = new Date(log.timestamp).getTime();
-                    const prevMs = new Date(logs[index + 1].timestamp).getTime();
-                    const activeDiffMs = getActiveDurationBetween(currentMs, prevMs);
-                    durationStr = formatDuration(activeDiffMs);
+                    durationStr = formatDuration(getActiveDurationBetween(new Date(log.timestamp).getTime(), new Date(logs[index + 1].timestamp).getTime()));
                 }
                 let label = log.type === 'tap' ? `#${log.id}` : log.type;
                 data += `${log.type},${label},${log.formattedTime},${durationStr}\n`;
             });
-            navigator.clipboard.writeText(data).then(() => {
-                alert("Data copied to clipboard!");
-            });
+            navigator.clipboard.writeText(data).then(() => alert("Data copied to clipboard!"));
         }
 
         function downloadCSV() {
@@ -676,17 +738,13 @@
             logs.forEach((log, index) => {
                 let durationStr = "Start";
                 if (index < logs.length - 1) {
-                    const currentMs = new Date(log.timestamp).getTime();
-                    const prevMs = new Date(logs[index + 1].timestamp).getTime();
-                    const activeDiffMs = getActiveDurationBetween(currentMs, prevMs);
-                    durationStr = formatDuration(activeDiffMs);
+                    durationStr = formatDuration(getActiveDurationBetween(new Date(log.timestamp).getTime(), new Date(logs[index + 1].timestamp).getTime()));
                 }
                 let label = log.type === 'tap' ? `#${log.id}` : log.type;
                 csvContent += `${log.type},${label},"${log.formattedTime}",${durationStr}\n`;
             });
-            const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", encodeURI(csvContent));
             link.setAttribute("download", "tap_logs_dynamic.csv");
             document.body.appendChild(link);
             link.click();
